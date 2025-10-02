@@ -88,7 +88,7 @@ def detectAndDisplay(frame: np.ndarray,
     frame_gray: np.ndarray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
     if use_blur:
         frame_gray = cv.GaussianBlur(frame_gray, blur_kernel, 0)
-    frame_gray = cv.equalizeHist(frame_gray)
+    frame_gray: np.ndarray = cv.equalizeHist(frame_gray)
 
     # Детекция краёв (Canny)
     edges: Optional[np.ndarray] = None
@@ -109,7 +109,7 @@ def detectAndDisplay(frame: np.ndarray,
     for face in faces:
         x, y, w, h = face
         center: Tuple[int, int] = (x + w // 2, y + h // 2)
-        frame = cv.ellipse(frame, center, (w // 2, h // 2), 0, 0, 360, (255, 0, 255), 4)
+        frame: np.ndarray = cv.ellipse(frame, center, (w // 2, h // 2), 0, 0, 360, (255, 0, 255), 4)
 
         cv.putText(frame, f"Face {faces_in_frame}", (x, y - 10),
                    cv.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 255), 2)
@@ -121,7 +121,7 @@ def detectAndDisplay(frame: np.ndarray,
             x2, y2, w2, h2 = eye
             eye_center: Tuple[int, int] = (x + x2 + w2 // 2, y + y2 + h2 // 2)
             radius: int = int(round((w2 + h2) * 0.25))
-            frame = cv.circle(frame, eye_center, radius, (255, 0, 0), 4)
+            frame: np.ndarray = cv.circle(frame, eye_center, radius, (255, 0, 0), 4)
             eyes_in_frame += 1
 
     total_faces += faces_in_frame
@@ -161,8 +161,13 @@ def draw_stats(frame: np.ndarray,
 
     y_offset: int = 35
     for i, stat in enumerate(stats):
-        cv.putText(frame, stat, (20, y_offset + i * 25),
-                   cv.FONT_HERSHEY_SIMPLEX, 0.6, (0, 255, 0), 2)
+        cv.putText(frame,
+                   stat,
+                   (20, y_offset + i * 25),
+                   cv.FONT_HERSHEY_SIMPLEX,
+                   0.6,
+                   (0, 255, 0),
+                   2)
 
     return frame
 
@@ -373,8 +378,12 @@ if __name__ == "__main__":
                 faces_count: int
                 eyes_count: int
                 processed_frame, edges, faces_count, eyes_count = detectAndDisplay(
-                    frame, args.use_blur, args.use_canny, (args.blur_kernel, args.blur_kernel),
-                    args.canny_low, args.canny_high
+                    frame,
+                    args.use_blur,
+                    args.use_canny,
+                    (args.blur_kernel, args.blur_kernel),
+                    args.canny_low,
+                    args.canny_high
                 )
 
                 # Расчет FPS
